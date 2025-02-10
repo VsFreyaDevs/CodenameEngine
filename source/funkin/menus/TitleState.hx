@@ -54,58 +54,58 @@ class TitleState extends MusicBeatState
 	function startIntro()
 	{
 		var event = event("onStartIntro", EventManager.get(StartIntroEvent).recycle(true, true, 'menus/titlescreen/titleEnter', 'newgrounds_logo', false));
-		if (!event.cancelled) {
-			if (!initialized && event.playMenuSong)
-				CoolUtil.playMenuSong(true);
+		if (event.cancelled) return;
+		
+		if (!initialized && event.playMenuSong)
+			CoolUtil.playMenuSong(true);
 
-			persistentUpdate = true;
+		persistentUpdate = true;
 
-			var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
-			add(bg);
+		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
+		add(bg);
 
-			#if TITLESCREEN_XML
-			if (event.titleScreenXML) {
-				titleScreenSprites = new MusicBeatGroup();
-				add(titleScreenSprites);
-				loadXML();
-			}
-			#end
-
-			if (titleText == null) {
-				titleText = new FlxSprite(100, FlxG.height * 0.8);
-				titleText.frames = Paths.getFrames(event.titleSprite);
-				titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
-				titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
-				titleText.antialiasing = true;
-				titleText.animation.play('idle');
-				titleText.updateHitbox();
-			}
-			add(titleText);
-
-			textGroup = new FlxGroup();
-
-			blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-			add(blackScreen);
-
-			#if !TITLESCREEN_XML
-			ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadAnimatedGraphic(Paths.image(event.ngSprite));
-			add(ngSpr);
-			ngSpr.visible = false;
-			ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
-			ngSpr.updateHitbox();
-			ngSpr.screenCenter(X);
-			ngSpr.antialiasing = true;
-			#end
-
-			FlxG.mouse.visible = event.showMouse;
-
-			if (initialized)
-				skipIntro();
-			else
-				initialized = true;
-
-			add(textGroup);
+		#if TITLESCREEN_XML
+		if (event.titleScreenXML) {
+			titleScreenSprites = new MusicBeatGroup();
+			add(titleScreenSprites);
+			loadXML();
 		}
+		#end
+
+		if (titleText == null) {
+			titleText = new FlxSprite(100, FlxG.height * 0.8);
+			titleText.frames = Paths.getFrames(event.titleSprite);
+			titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
+			titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
+			titleText.antialiasing = true;
+			titleText.animation.play('idle');
+			titleText.updateHitbox();
+		}
+		add(titleText);
+
+		textGroup = new FlxGroup();
+
+		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+		add(blackScreen);
+
+		#if !TITLESCREEN_XML
+		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadAnimatedGraphic(Paths.image(event.ngSprite));
+		add(ngSpr);
+		ngSpr.visible = false;
+		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
+		ngSpr.updateHitbox();
+		ngSpr.screenCenter(X);
+		ngSpr.antialiasing = true;
+		#end
+
+		FlxG.mouse.visible = event.showMouse;
+
+		if (initialized)
+			skipIntro();
+		else
+			initialized = true;
+
+		add(textGroup);
 	}
 	
 	public function getIntroTextShit():Array<Array<String>>
