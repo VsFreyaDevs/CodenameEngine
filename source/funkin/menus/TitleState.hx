@@ -174,17 +174,17 @@ class TitleState extends MusicBeatState
 
 	public function pressEnter() {
 		var event = event("onEnterPressed", EventManager.get(EnterPressedEvent).recycle(true, 0xFFFFFFFF, true, CONFIRM, 2));
-		if (!event.cancelled) {
-			titleText.animation.play('press');
+		if (event.cancelled) return;
+		
+		titleText.animation.play('press');
 
-			if (event.flash) FlxG.camera.flash(event.flashColor, 1);
-			if (event.playSfx) CoolUtil.playMenuSFX(event.menuSound, 0.7);
+		if (event.flash) FlxG.camera.flash(event.flashColor, 1);
+		if (event.playSfx) CoolUtil.playMenuSFX(event.menuSound, 0.7);
 
-			transitioning = true;
-			// FlxG.sound.music.stop();
+		transitioning = true;
+		// FlxG.sound.music.stop();
 
-			new FlxTimer().start(event.timerLength, (_) -> goToMainMenu());
-		}
+		new FlxTimer().start(event.timerLength, (_) -> goToMainMenu());
 	}
 
 	function goToMainMenu() {
@@ -207,14 +207,14 @@ class TitleState extends MusicBeatState
 		var money:Alphabet;
 		
 		var event = event("onCreateText", new CancellableEvent());
-		if (!event.cancelled) {
-			for (i=>text in textArray)
-			{
-				if (text == "" || text == null) continue;
-				money = new Alphabet(0, (i * 60) + 200, text, true, false);
-				money.screenCenter(X);
-				textGroup.add(money);
-			}
+		if (!event.cancelled) return;
+		
+		for (i=>text in textArray)
+		{
+			if (text == "" || text == null) continue;
+			money = new Alphabet(0, (i * 60) + 200, text, true, false);
+			money.screenCenter(X);
+			textGroup.add(money);
 		}
 	}
 
@@ -223,21 +223,21 @@ class TitleState extends MusicBeatState
 		var coolText:Alphabet;
 		
 		var event = event("onMoreText", new CancellableEvent());
-		if (!event.cancelled) {
-			coolText = new Alphabet(0, (textGroup.length * 60) + 200, text, true, false);
-			coolText.screenCenter(X);
-			textGroup.add(coolText);
-		}
+		if (event.cancelled) return;
+		
+		coolText = new Alphabet(0, (textGroup.length * 60) + 200, text, true, false);
+		coolText.screenCenter(X);
+		textGroup.add(coolText);
 	}
 
 	public function deleteCoolText()
 	{
 		var event = event("onDeleteText", new CancellableEvent());
-		if (!event.cancelled) {
-			while (textGroup.members.length > 0) {
-				textGroup.members[0].destroy();
-				textGroup.remove(textGroup.members[0], true);
-			}
+		if (event.cancelled) return;
+		
+		while (textGroup.members.length > 0) {
+			textGroup.members[0].destroy();
+			textGroup.remove(textGroup.members[0], true);
 		}
 	}
 
@@ -355,19 +355,19 @@ class TitleState extends MusicBeatState
 	public function skipIntro():Void
 	{
 		var event = event("onIntroSkipped", new CancellableEvent());
-		if (!event.cancelled) {
-			if (!skippedIntro)
-			{
-				#if !TITLESCREEN_XML
-				remove(ngSpr);
-				#end
+		if (event.cancelled) return;
+		
+		if (!skippedIntro)
+		{
+			#if !TITLESCREEN_XML
+			remove(ngSpr);
+			#end
 
-				FlxG.camera.flash(FlxColor.WHITE, 4);
-				remove(blackScreen);
-				blackScreen.destroy();
-				remove(textGroup);
-				skippedIntro = true;
-			}
+			FlxG.camera.flash(FlxColor.WHITE, 4);
+			remove(blackScreen);
+			blackScreen.destroy();
+			remove(textGroup);
+			skippedIntro = true;
 		}
 	}
 }
