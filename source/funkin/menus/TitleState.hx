@@ -2,6 +2,11 @@ package funkin.menus;
 
 import funkin.backend.MusicBeatGroup;
 import funkin.backend.utils.XMLUtil;
+import funkin.backend.scripting.EventManager;
+import funkin.backend.scripting.events.StartIntroEvent;
+import funkin.backend.scripting.events.NameEvent;
+import funkin.backend.scripting.events.EnterPressedEvent;
+import funkin.backend.scripting.events.CancellableEvent;
 import flixel.util.typeLimit.OneOfTwo;
 import flixel.group.FlxGroup;
 import flixel.input.gamepad.FlxGamepad;
@@ -48,69 +53,77 @@ class TitleState extends MusicBeatState
 
 	function startIntro()
 	{
-		if (!initialized)
-			CoolUtil.playMenuSong(true);
+		var event = scripts.event("onStartIntro", EventManager.get(StartIntroEvent).recycle(true, true, 'menus/titlescreen/titleEnter', 'newgrounds_logo', false));
+		if (!event.cancelled) {
+			if (!initialized && event.playMenuSong)
+				CoolUtil.playMenuSong(true);
 
-		persistentUpdate = true;
+			persistentUpdate = true;
 
-		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
-		add(bg);
+			var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width, FlxG.height, FlxColor.BLACK);
+			add(bg);
 
-		#if TITLESCREEN_XML
-		titleScreenSprites = new MusicBeatGroup();
-		add(titleScreenSprites);
-		loadXML();
-		#end
+			#if TITLESCREEN_XML
+			if (event.titleScreenXML) {
+				titleScreenSprites = new MusicBeatGroup();
+				add(titleScreenSprites);
+				loadXML();
+			}
+			#end
 
-		if (titleText == null) {
-			titleText = new FlxSprite(100, FlxG.height * 0.8);
-			titleText.frames = Paths.getFrames('menus/titlescreen/titleEnter');
-			titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
-			titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
-			titleText.antialiasing = true;
-			titleText.animation.play('idle');
-			titleText.updateHitbox();
+			if (titleText == null) {
+				titleText = new FlxSprite(100, FlxG.height * 0.8);
+				titleText.frames = Paths.getFrames(event.titleSprite);
+				titleText.animation.addByPrefix('idle', "Press Enter to Begin", 24);
+				titleText.animation.addByPrefix('press', "ENTER PRESSED", 24);
+				titleText.antialiasing = true;
+				titleText.animation.play('idle');
+				titleText.updateHitbox();
+			}
+			add(titleText);
+
+			textGroup = new FlxGroup();
+
+			blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
+			add(blackScreen);
+
+			#if !TITLESCREEN_XML
+			ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadAnimatedGraphic(Paths.image(event.ngSprite));
+			add(ngSpr);
+			ngSpr.visible = false;
+			ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
+			ngSpr.updateHitbox();
+			ngSpr.screenCenter(X);
+			ngSpr.antialiasing = true;
+			#end
+
+			FlxG.mouse.visible = event.showMouse;
+
+			if (initialized)
+				skipIntro();
+			else
+				initialized = true;
+
+			add(textGroup);
 		}
-		add(titleText);
-
-		textGroup = new FlxGroup();
-
-		blackScreen = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
-		add(blackScreen);
-
-		#if !TITLESCREEN_XML
-		ngSpr = new FlxSprite(0, FlxG.height * 0.52).loadAnimatedGraphic(Paths.image('newgrounds_logo'));
-		add(ngSpr);
-		ngSpr.visible = false;
-		ngSpr.setGraphicSize(Std.int(ngSpr.width * 0.8));
-		ngSpr.updateHitbox();
-		ngSpr.screenCenter(X);
-		ngSpr.antialiasing = true;
-		#end
-
-		FlxG.mouse.visible = false;
-
-		if (initialized)
-			skipIntro();
-		else
-			initialized = true;
-
-		add(textGroup);
 	}
-
+	
 	public function getIntroTextShit():Array<Array<String>>
 	{
-		var fullText:String = Assets.getText(Paths.txt('titlescreen/introText'));
+		var event = scripts.event("onGetIntroText", EventManager.get(NameEvent).recycle('introText'));
+		if (!event.cancelled) {
+			var fullText:String = Assets.getText(Paths.txt('titlescreen/${event.name}' || 'titlescreen/introText'));
 
-		var firstArray:Array<String> = fullText.split('\n');
-		var swagGoodArray:Array<Array<String>> = [];
+			var firstArray:Array<String> = fullText.split('\n');
+			var swagGoodArray:Array<Array<String>> = [];
 
-		for (i in firstArray)
-		{
-			swagGoodArray.push(i.split('--'));
+			for (i in firstArray)
+			{
+				swagGoodArray.push(i.split('--'));
+			}
+
+			return swagGoodArray;
 		}
-
-		return swagGoodArray;
 	}
 
 	var transitioning:Bool = false;
@@ -161,15 +174,18 @@ class TitleState extends MusicBeatState
 	}
 
 	public function pressEnter() {
-		titleText.animation.play('press');
+		var event = scripts.event("onEnterPressed", EventManager.get(EnterPressedEvent).recycle(true, 0xFFFFFFFF, true, CONFIRM, 2));
+		if (!event.cancelled) {
+			titleText.animation.play('press');
 
-		FlxG.camera.flash(FlxColor.WHITE, 1);
-		CoolUtil.playMenuSFX(CONFIRM, 0.7);
+			if (event.flash) FlxG.camera.flash(event.flashColor, 1);
+			if (event.playSfx) CoolUtil.playMenuSFX(event.menuSound, 0.7);
 
-		transitioning = true;
-		// FlxG.sound.music.stop();
+			transitioning = true;
+			// FlxG.sound.music.stop();
 
-		new FlxTimer().start(2, (_) -> goToMainMenu());
+			new FlxTimer().start(event.timerLength, (_) -> goToMainMenu());
+		}
 	}
 
 	function goToMainMenu() {
@@ -189,27 +205,40 @@ class TitleState extends MusicBeatState
 
 	public function createCoolText(textArray:Array<String>)
 	{
-		for (i=>text in textArray)
-		{
-			if (text == "" || text == null) continue;
-			var money:Alphabet = new Alphabet(0, (i * 60) + 200, text, true, false);
-			money.screenCenter(X);
-			textGroup.add(money);
+		var money:Alphabet;
+		
+		var event = scripts.event("onCreateText", new CancellableEvent());
+		if (!event.cancelled) {
+			for (i=>text in textArray)
+			{
+				if (text == "" || text == null) continue;
+				money = new Alphabet(0, (i * 60) + 200, text, true, false);
+				money.screenCenter(X);
+				textGroup.add(money);
+			}
 		}
 	}
 
 	public function addMoreText(text:String)
 	{
-		var coolText:Alphabet = new Alphabet(0, (textGroup.length * 60) + 200, text, true, false);
-		coolText.screenCenter(X);
-		textGroup.add(coolText);
+		var coolText:Alphabet;
+		
+		var event = scripts.event("onMoreText", new CancellableEvent());
+		if (!event.cancelled) {
+			coolText = new Alphabet(0, (textGroup.length * 60) + 200, text, true, false);
+			coolText.screenCenter(X);
+			textGroup.add(coolText);
+		}
 	}
 
 	public function deleteCoolText()
 	{
-		while (textGroup.members.length > 0) {
-			textGroup.members[0].destroy();
-			textGroup.remove(textGroup.members[0], true);
+		var event = scripts.event("onDeleteText", new CancellableEvent());
+		if (!event.cancelled) {
+			while (textGroup.members.length > 0) {
+				textGroup.members[0].destroy();
+				textGroup.remove(textGroup.members[0], true);
+			}
 		}
 	}
 
@@ -326,17 +355,20 @@ class TitleState extends MusicBeatState
 
 	public function skipIntro():Void
 	{
-		if (!skippedIntro)
-		{
-			#if !TITLESCREEN_XML
-			remove(ngSpr);
-			#end
+		var event = scripts.event("onIntroSkipped", new CancellableEvent());
+		if (!event.cancelled) {
+			if (!skippedIntro)
+			{
+				#if !TITLESCREEN_XML
+				remove(ngSpr);
+				#end
 
-			FlxG.camera.flash(FlxColor.WHITE, 4);
-			remove(blackScreen);
-			blackScreen.destroy();
-			remove(textGroup);
-			skippedIntro = true;
+				FlxG.camera.flash(FlxColor.WHITE, 4);
+				remove(blackScreen);
+				blackScreen.destroy();
+				remove(textGroup);
+				skippedIntro = true;
+			}
 		}
 	}
 }
