@@ -8,6 +8,7 @@ import flixel.effects.FlxFlicker;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import lime.app.Application;
 import funkin.backend.scripting.events.*;
 
@@ -151,8 +152,9 @@ class MainMenuState extends MusicBeatState
 
 	function selectItem() {
 		var primevent = event("onInitialSelection", EventManager.get(AmountEvent).recycle(1));
-		if (!primevent.cancelled) {
+		if (primevent.cancelled) return;
 			selectedSomethin = true;
+			
 			CoolUtil.playMenuSFX(CONFIRM);
 
 			if (Options.flashingMenu) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
@@ -165,6 +167,7 @@ class MainMenuState extends MusicBeatState
 
 			var event = event("onSelectItem", EventManager.get(NameEvent).recycle(daChoice));
 			if (event.cancelled) return;
+			
 			switch (event.name)
 			{
 				case 'story mode': FlxG.switchState(new StoryMenuState());
