@@ -1,6 +1,7 @@
 package funkin.backend.scripting.events;
 
 import funkin.backend.utils.CoolUtil.CoolSfx;
+import flixel.util.FlxColor;
 
 final class EnterPressedEvent extends CancellableEvent {
   /**
