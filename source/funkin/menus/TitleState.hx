@@ -109,22 +109,17 @@ class TitleState extends MusicBeatState
 	}
 	
 	public function getIntroTextShit():Array<Array<String>>
-	{
-		var fullText:String;
-		var firstArray:Array<String>;
-		var swagGoodArray:Array<Array<String>>;
-		
+	{		
 		var event = event("onGetIntroText", EventManager.get(NameEvent).recycle('introText'));
-		if (!event.cancelled) {
-			fullText = Assets.getText(Paths.txt(Assets.exists(Paths.txt('titlescreen/${event.name}')) ? 'titlescreen/${event.name}' : 'titlescreen/introText'));
+		
+		var fullText:String = Assets.getText(Paths.txt(Assets.exists(Paths.txt('titlescreen/${event.name}')) ? 'titlescreen/${event.name}' : 'titlescreen/introText'));
 
-			firstArray = fullText.split('\n');
-			swagGoodArray = [];
+		var firstArray:Array<String> = fullText.split('\n');
+		var swagGoodArray:Array<Array<String>> = [];
 
-			for (i in firstArray)
-			{
-				swagGoodArray.push(i.split('--'));
-			}
+		for (i in firstArray)
+		{
+			swagGoodArray.push(i.split('--'));
 		}
 		
 		return swagGoodArray;
