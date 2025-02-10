@@ -53,7 +53,7 @@ class TitleState extends MusicBeatState
 
 	function startIntro()
 	{
-		var event = scripts.event("onStartIntro", EventManager.get(StartIntroEvent).recycle(true, true, 'menus/titlescreen/titleEnter', 'newgrounds_logo', false));
+		var event = event("onStartIntro", EventManager.get(StartIntroEvent).recycle(true, true, 'menus/titlescreen/titleEnter', 'newgrounds_logo', false));
 		if (!event.cancelled) {
 			if (!initialized && event.playMenuSong)
 				CoolUtil.playMenuSong(true);
@@ -110,7 +110,7 @@ class TitleState extends MusicBeatState
 	
 	public function getIntroTextShit():Array<Array<String>>
 	{
-		var event = scripts.event("onGetIntroText", EventManager.get(NameEvent).recycle('introText'));
+		var event = event("onGetIntroText", EventManager.get(NameEvent).recycle('introText'));
 		if (!event.cancelled) {
 			var fullText:String = Assets.getText(Paths.txt('titlescreen/${event.name}' || 'titlescreen/introText'));
 
@@ -174,7 +174,7 @@ class TitleState extends MusicBeatState
 	}
 
 	public function pressEnter() {
-		var event = scripts.event("onEnterPressed", EventManager.get(EnterPressedEvent).recycle(true, 0xFFFFFFFF, true, CONFIRM, 2));
+		var event = event("onEnterPressed", EventManager.get(EnterPressedEvent).recycle(true, 0xFFFFFFFF, true, CONFIRM, 2));
 		if (!event.cancelled) {
 			titleText.animation.play('press');
 
@@ -207,7 +207,7 @@ class TitleState extends MusicBeatState
 	{
 		var money:Alphabet;
 		
-		var event = scripts.event("onCreateText", new CancellableEvent());
+		var event = event("onCreateText", new CancellableEvent());
 		if (!event.cancelled) {
 			for (i=>text in textArray)
 			{
@@ -223,7 +223,7 @@ class TitleState extends MusicBeatState
 	{
 		var coolText:Alphabet;
 		
-		var event = scripts.event("onMoreText", new CancellableEvent());
+		var event = event("onMoreText", new CancellableEvent());
 		if (!event.cancelled) {
 			coolText = new Alphabet(0, (textGroup.length * 60) + 200, text, true, false);
 			coolText.screenCenter(X);
@@ -233,7 +233,7 @@ class TitleState extends MusicBeatState
 
 	public function deleteCoolText()
 	{
-		var event = scripts.event("onDeleteText", new CancellableEvent());
+		var event = event("onDeleteText", new CancellableEvent());
 		if (!event.cancelled) {
 			while (textGroup.members.length > 0) {
 				textGroup.members[0].destroy();
@@ -355,7 +355,7 @@ class TitleState extends MusicBeatState
 
 	public function skipIntro():Void
 	{
-		var event = scripts.event("onIntroSkipped", new CancellableEvent());
+		var event = event("onIntroSkipped", new CancellableEvent());
 		if (!event.cancelled) {
 			if (!skippedIntro)
 			{
