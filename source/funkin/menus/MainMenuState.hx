@@ -152,7 +152,7 @@ class MainMenuState extends MusicBeatState
 
 	function selectItem() {
 		var primevent = event("onInitialSelection", EventManager.get(AmountEvent).recycle(1));
-		if (primevent.cancelled) return;
+		if (!primevent.cancelled) {
 			selectedSomethin = true;
 			
 			CoolUtil.playMenuSFX(CONFIRM);
