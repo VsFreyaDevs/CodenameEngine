@@ -67,13 +67,14 @@ class HashLinkFixer {
 
 					switch (hlNativeMeta.params) {
 						case []: hlNativeMeta.params = [macro "std", macro $v{f.name}];
+						case [_.expr => EConst(CString(name))]: hlNativeMeta.params = [macro "std", macro $v{name}];
 						case [_.expr => EConst(CFloat(version))]:
-							/*final curVersion = Context.definedValue("hl_ver");
+							final curVersion = Context.definedValue("hl_ver");
 							if (curVersion != null && version > curVersion) {
 								if (f.meta.filter((m) -> return m.name == ":noExpr").length > 0)
 									Context.error("Missing function body", hlNativeMeta.pos);
 							}
-							else*/
+							else
 								hlNativeMeta.params = [macro "std", macro $v{f.name}];
 						default:
 					}
