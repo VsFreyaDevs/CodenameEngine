@@ -69,6 +69,7 @@ class CharacterCreationScreen extends UISubstateWindow {
 		add(title = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, "Sprite Data", 28));
 
 		spriteTextBox = new UITextBox(title.x, title.y + title.height + 38, 'sprite', 200);
+		spriteTextBox.onChange = (sprite:String) -> checkSpriteFile(sprite);
 		add(spriteTextBox);
 		addLabelOn(spriteTextBox, "Sprite");
 
@@ -80,6 +81,7 @@ class CharacterCreationScreen extends UISubstateWindow {
 		updateIcon('face');
 
 		gameOverCharTextBox = new UITextBox(iconTextBox.x + 150 + (75 + 12), iconTextBox.y, "bf-dead", 200);
+		gameOverCharTextBox.onChange = (sprite:String) -> checkSpriteFile(sprite);
 		add(gameOverCharTextBox);
 		addLabelOn(gameOverCharTextBox, "Game Over Character");
 
