@@ -11,7 +11,7 @@ class CodenameBuildField extends TextField {
 		defaultTextFormat = Framerate.textFormat;
 		autoSize = LEFT;
 		multiline = wordWrap = false;
-		text = 'Codename Engine ${Main.releaseCycle}\nCommit ${GitCommitMacro.commitNumber} (${GitCommitMacro.commitHash})';
+		text = 'Vs. br: Retoasted v1.0 DEV/PLAYTESTER BUILD\nCodename Engine ${Main.releaseCycle}\npls dont leak pls dont leak';
 		selectable = false;
 	}
 }

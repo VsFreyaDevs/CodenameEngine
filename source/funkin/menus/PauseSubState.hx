@@ -20,6 +20,8 @@ class PauseSubState extends MusicBeatSubstate
 {
 	public static var script:String = "";
 
+	var bg:FlxSprite;
+
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var levelInfo:FunkinText;
@@ -68,7 +70,7 @@ class PauseSubState extends MusicBeatSubstate
 
 		if (__cancelDefault = event.cancelled) return;
 
-		var bg:FlxSprite = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, FlxColor.BLACK);
+		bg = new FlxSprite().makeSolid(FlxG.width + 100, FlxG.height + 100, FlxColor.BLACK);
 		bg.updateHitbox();
 		bg.alpha = 0;
 		bg.screenCenter();

@@ -9,7 +9,7 @@ import funkin.editors.ui.UIContextMenu.UIContextMenuOption;
 import funkin.game.Character;
 
 class CharacterEditor extends UIState {
-	static var __character:String;
+	public static var __character:String;
 	public var character:Character;
 
 	public var ghosts:CharacterGhostsHandler;
@@ -178,6 +178,11 @@ class CharacterEditor extends UIState {
 					},
 					null,
 					{
+						label: "Drag Offsets",
+						onSelect: _offsets_drag_toggle,
+						icon: Options.characterDragOffsets ? 1 : 0
+					},
+					{
 						label: "Clear Offsets",
 						keybind: [CONTROL, R],
 						onSelect: _offsets_clear,
@@ -274,6 +279,7 @@ class CharacterEditor extends UIState {
 	//private var camDragSpeed:Float = 1.2;
 
 	private var nextScroll:FlxPoint = FlxPoint.get(0,0);
+	private var prevDragOffsets:FlxPoint = FlxPoint.get(0,0);
 
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
@@ -287,19 +293,25 @@ class CharacterEditor extends UIState {
 			characterPropertiresWindow.characterInfo.text = '${character.getNameList().length} Animations\nFlipped: ${character.flipX}\nSprite: ${character.sprite}\nAnim: ${character.getAnimName()}\nOffset: (${character.frameOffset.x}, ${character.frameOffset.y})';
 
 		if (!(characterPropertiresWindow.hovered || characterAnimsWindow.hovered) && !characterAnimsWindow.dragging) {
-			if (FlxG.mouse.wheel != 0) {
-				zoom += 0.25 * FlxG.mouse.wheel;
-				__camZoom = Math.pow(2, zoom);
-			}
+		    if (Options.characterDragOffsets)
+			{
+				if (FlxG.mouse.justPressed)
+					prevDragOffsets = character.animOffsets.get(character.getAnimName()).clone();
 
-			if (FlxG.mouse.justReleasedRight) {
-				closeCurrentContextMenu();
-				openContextMenu(topMenu[2].childs);
+				if (FlxG.mouse.justReleased)	
+				{
+					var curOffsets = character.animOffsets.get(character.getAnimName()).clone();
+			     	var difference = curOffsets - prevDragOffsets;
+						undos.addToUndo(CChangeOffset(character.getAnimName(), difference));
+				}
 			}
 			if (FlxG.mouse.pressed) {
-				nextScroll.set(nextScroll.x - FlxG.mouse.deltaScreenX, nextScroll.y - FlxG.mouse.deltaScreenY);
+				if (!Options.characterDragOffsets)
+					nextScroll.set(nextScroll.x - FlxG.mouse.deltaScreenX, nextScroll.y - FlxG.mouse.deltaScreenY);
+				else
+					changeOffset(character.getAnimName(), FlxPoint.get(Math.floor(FlxG.mouse.deltaScreenX / character.scale.x * (character.playerOffsets ? 1 : -1)), -Math.floor(FlxG.mouse.deltaScreenY / character.scale.y)), false);
 				currentCursor = HAND;
-			} else
+		    } else
 				currentCursor = ARROW;
 		} else if (!FlxG.mouse.pressed)
 			currentCursor = ARROW;
@@ -575,6 +587,10 @@ class CharacterEditor extends UIState {
 
 	function _offsets_extra_right(_) {
 		changeOffset(character.getAnimName(), FlxPoint.get(!character.isFlippedOffsets() ? -5 : 5, 0));
+	}
+
+	function _offsets_drag_toggle(t) {
+		t.icon = (Options.characterDragOffsets = !Options.characterDragOffsets) ? 1 : 0;
 	}
 
 	function _offsets_clear(_) {
