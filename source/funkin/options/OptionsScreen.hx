@@ -26,8 +26,13 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 		super.update(elapsed);
 
 		var controls = PlayerSettings.solo.controls;
+		
+		#if mobile
+    if (vPad.buttonC.justPressed)
+    MusicBeatState.switchState(new funkin.mobile.CustomControlsState());
+    #end
 
-		changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0) - FlxG.mouse.wheel);
+		changeSelection((controls.UP_P ? -1 : 0) + (controls.DOWN_P ? 1 : 0) #if desktop - FlxG.mouse.wheel #end);
 		x = id * FlxG.width;
 		for(k=>option in members) {
 			if(option == null) continue;
@@ -45,20 +50,22 @@ class OptionsScreen extends FlxTypedSpriteGroup<OptionType> {
 
 		if (members.length > 0) {
 			members[curSelected].selected = true;
-			if (controls.ACCEPT || (FlxG.mouse.justReleased && Main.timeSinceFocus > 0.25))
+			if (controls.ACCEPT #if desktop || (FlxG.mouse.justReleased && Main.timeSinceFocus > 0.25) #end)
 				members[curSelected].onSelect();
 			if (controls.LEFT_P)
 				members[curSelected].onChangeSelection(-1);
 			if (controls.RIGHT_P)
 				members[curSelected].onChangeSelection(1);
 		}
-		if (controls.BACK || FlxG.mouse.justReleasedRight)
+		if (controls.BACK #if desktop || FlxG.mouse.justReleasedRight #end)
 			close();
 	}
 
 	public function close() {
-		onClose(this);
-	}
+		#if mobile MusicBeatState.instance.vPad.visible = false;
+		MusicBeatState.instance.addVPad(UP_DOWN, A_B); MusicBeatState.instance.addVPadCamera(); #end
+		  onClose(this);
+	  }
 
 	public function changeSelection(sel:Int, force:Bool = false) {
 		if (members.length <= 0 || (sel == 0 && !force)) return;

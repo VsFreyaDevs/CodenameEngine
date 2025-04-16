@@ -11,8 +11,16 @@ import funkin.backend.system.Controls;
 import funkin.options.PlayerSettings;
 import flixel.FlxSubState;
 
+#if mobile
+import flixel.FlxCamera;
+import flixel.input.actions.FlxActionInput;
+import funkin.mobile.FlxVirtualPad;
+#end
+
 class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 {
+	public static var instance:MusicBeatSubstate;
+
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
 
@@ -91,9 +99,37 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 	inline function get_controlsP2():Controls
 		return PlayerSettings.player2.controls;
 
+	#if mobile
+	public var vPad:FlxVirtualPad;
+	var trackedinputs:Array<FlxActionInput> = [];
 
+	public function addVPad(?DPad:FlxDPadMode, ?Action:FlxActionMode) {
+		vPad = new FlxVirtualPad(DPad, Action);
+		vPad.alpha = 0.35;
+		add(vPad);
+		controls.setUIVirtualPad(vPad, DPad, Action);
+		trackedinputs = controls.trackedUIinputs;
+		controls.trackedUIinputs = [];
+	}
+
+	public function addVPadCamera() {
+	  var camcontrol = new FlxCamera(); 
+    FlxG.cameras.add(camcontrol, false); 
+    camcontrol.bgColor.alpha = 0; 
+    vPad.cameras = [camcontrol];
+	}
+
+	public function removeVPad() {
+	  if (vPad != null) {
+	    remove(vPad);
+	    controls.removeFlxInput(trackedinputs);
+	  }
+	}
+	#end
+	
 	public function new(scriptsAllowed:Bool = true, ?scriptName:String) {
 		super();
+		instance = this;
 		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
 		this.scriptName = scriptName;
 	}
@@ -112,6 +148,15 @@ class MusicBeatSubstate extends FlxSubState implements IBeatReceiver
 					script.remappedNames.set(script.fileName, '$i:${script.fileName}');
 					stateScripts.add(script);
 					script.load();
+					#if mobile
+					stateScripts.set('setVirtualPad', function(DPad:FlxDPadMode, Action:FlxActionMode, ?addPadCam = false){
+						if (vPad != null) removeVPad();
+                    removeVPad();
+				    addVPad(DPad, Action);
+				    if(addPadCam)
+				    addVPadCamera();
+					});
+				    #end
 				}
 			}
 			else stateScripts.reload();

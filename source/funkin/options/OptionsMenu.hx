@@ -53,17 +53,15 @@ class OptionsMenu extends TreeMenu {
 			if (o.substate != null) {
 				persistentUpdate = false;
 				persistentDraw = true;
-				if (o.substate is MusicBeatSubstate) {
+				if (o.substate is MusicBeatSubstate)
 					openSubState(o.substate);
-				} else {
+				else
 					openSubState(Type.createInstance(o.substate, []));
-				}
 			} else {
-				if (o.state is OptionsScreen) {
+				if (o.state is OptionsScreen) 
 					optionsTree.add(o.state);
-				} else {
+				else
 					optionsTree.add(Type.createInstance(o.state, []));
-				}
 			}
 		})]);
 
@@ -91,6 +89,12 @@ class OptionsMenu extends TreeMenu {
 				}
 			}
 		}
+
+		#if mobile
+	  addVPad(UP_DOWN, A_B);
+	  addVPadCamera();
+	  vPad.visible = true;
+	  #end
 	}
 
 	public override function exit() {

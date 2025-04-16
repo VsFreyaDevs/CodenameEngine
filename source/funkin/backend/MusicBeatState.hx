@@ -13,8 +13,18 @@ import funkin.backend.system.interfaces.IBeatReceiver;
 import funkin.backend.system.Conductor;
 import funkin.options.PlayerSettings;
 
+#if mobile
+import flixel.FlxCamera;
+import flixel.input.actions.FlxActionInput;
+import funkin.mobile.FlxVirtualPad;
+import funkin.mobile.HitBox;
+import funkin.mobile.Mobilecontrols;
+#end
+
 class MusicBeatState extends FlxState implements IBeatReceiver
 {
+	public static var instance:MusicBeatState;
+
 	private var lastBeat:Float = 0;
 	private var lastStep:Float = 0;
 
@@ -108,8 +118,72 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	inline function get_controlsP2():Controls
 		return PlayerSettings.player2.controls;
 
+	#if mobile
+	public var vPad:FlxVirtualPad;
+	var mcontrols:Mobilecontrols;
+
+	var trackedinputs:Array<FlxActionInput> = [];
+
+	public function addVPad(?DPad:FlxDPadMode, ?Action:FlxActionMode) {
+		vPad = new FlxVirtualPad(DPad, Action);
+		vPad.alpha = 0.35;
+		add(vPad);
+		controls.setUIVirtualPad(vPad, DPad, Action);
+		trackedinputs = controls.trackedUIinputs;
+		controls.trackedUIinputs = [];
+	}
+	
+	public function addVPadCamera() {
+	  var camcontrol = new FlxCamera(); 
+    FlxG.cameras.add(camcontrol, false); 
+    camcontrol.bgColor.alpha = 0; 
+    vPad.cameras = [camcontrol];
+	}
+
+	public function removeVPad() {
+	  if (vPad != null) {
+	    remove(vPad);
+	    controls.removeFlxInput(trackedinputs);
+	  }
+	}
+	
+	public function addMControls()
+	{
+	  mcontrols = new Mobilecontrols();
+	  switch (mcontrols.mode.toLowerCase())
+	  {
+	    case 'vpad_right' | 'vpad_left' | 'vpad_custom':
+	      controls.setVirtualPad(mcontrols.vPad, FULL, NONE);
+	    case 'hitbox':
+	      controls.setHitBox(mcontrols.hitbox);
+	    default:
+	  }
+
+	  trackedinputs = controls.trackedinputs;
+	  controls.trackedinputs = [];
+
+	  var camcontrol = new FlxCamera();
+	  FlxG.cameras.add(camcontrol, false);
+	  camcontrol.bgColor.alpha = 0;
+	  mcontrols.cameras = [camcontrol];
+
+	  mcontrols.visible = false;
+	  
+	  add(mcontrols);
+	}
+
+	public function removeMControls()
+	{
+	  if (mcontrols != null) {
+	    controls.removeFlxInput(trackedinputs);
+	    remove(mcontrols);
+	  }
+	}
+	#end
+
 	public function new(scriptsAllowed:Bool = true, ?scriptName:String) {
 		super();
+		instance = this;
 		this.scriptsAllowed = #if SOFTCODED_STATES scriptsAllowed #else false #end;
 
 		if(lastStateName != (lastStateName = Type.getClassName(Type.getClass(this)))) {
@@ -133,6 +207,13 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 					script.remappedNames.set(script.fileName, '$i:${script.fileName}');
 					stateScripts.add(script);
 					script.load();
+					#if mobile
+					stateScripts.set('setVirtualPad', function(DPad:FlxDPadMode, Action:FlxActionMode, ?addPadCam = false){
+						if (vPad != null) removeVPad();
+						addVPad(DPad, Action);
+						if(addPadCam) addVPadCamera();
+					});
+					#end
 				}
 			}
 			else stateScripts.reload();
@@ -245,10 +326,24 @@ class MusicBeatState extends FlxState implements IBeatReceiver
 	}
 
 	public override function destroy() {
+	  #if mobile
+	  controls.removeFlxInput(trackedinputs);
+	  #end
 		super.destroy();
 		graphicCache.destroy();
 		call("destroy");
 		stateScripts = FlxDestroyUtil.destroy(stateScripts);
+		#if mobile
+	  if (vPad != null) {
+	    vPad.destroy();
+	    vPad = null;
+	  }
+	  
+	  if (mcontrols != null) {
+	    mcontrols.destroy();
+	    mcontrols = null;
+	  }
+	  #end
 	}
 
 	public override function draw() {

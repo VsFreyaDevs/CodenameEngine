@@ -83,6 +83,12 @@ class MainMenuState extends MusicBeatState
 		add(versionText);
 
 		changeItem();
+
+		#if mobile
+		addVPad(UP_DOWN, A_B_C);
+		addVPadCamera();
+		vPad.visible = true;
+		#end
 	}
 
 	var selectedSomethin:Bool = false;
@@ -121,8 +127,9 @@ class MainMenuState extends MusicBeatState
 				FlxG.switchState(new TitleState());
 
 			#if MOD_SUPPORT
-			if (controls.SWITCHMOD) {
+			if (controls.SWITCHMOD #if mobile || vPad.buttonC.justPressed #end)
 				openSubState(new ModSwitchMenu());
+			vPad.visible = false;
 				persistentUpdate = false;
 				persistentDraw = true;
 			}

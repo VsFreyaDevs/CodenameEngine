@@ -39,13 +39,11 @@ class Main extends Sprite
 	public static var instance:Main;
 
 	public static var modToLoad:String = null;
-	public static var forceGPUOnlyBitmapsOff:Bool = #if windows false #else true #end;
+	public static var forceGPUOnlyBitmapsOff:Bool = #if (windows && mobile) false #else true #end;
 	public static var noTerminalColor:Bool = false;
 
 	public static var scaleMode:FunkinRatioScaleMode;
-	#if !mobile
 	public static var framerateSprite:funkin.backend.system.framerate.Framerate;
-	#end
 
 	var gameWidth:Int = 1280; // Width of the game in pixels (might be less / more in actual pixels).
 	var gameHeight:Int = 720; // Height of the game in pixels (might be less / more in actual pixels).
@@ -71,10 +69,11 @@ class Main extends Sprite
 		super();
 
 		#if android
-		Sys.setCwd(Context.getExternalFilesDir() + '/');
+		Sys.setCwd(haxe.io.Path.addTrailingSlash(MobileUtil.getDirectory()));
+		MobileUtil.getPermissions();
 		#elseif ios
-		Sys.setCwd(System.applicationStorageDirectory);
-		#end
+		Sys.setCwd(lime.system.System.applicationStorageDirectory);
+        #end
 
 		instance = this;
 
@@ -82,7 +81,7 @@ class Main extends Sprite
 
 		addChild(game = new FunkinGame(gameWidth, gameHeight, MainState, Options.framerate, Options.framerate, skipSplash, startFullscreen));
 
-		#if (!mobile && !web)
+		#if !web
 		addChild(framerateSprite = new funkin.backend.system.framerate.Framerate());
 		SystemInfo.init();
 		#end
@@ -139,17 +138,16 @@ class Main extends Sprite
 		funkin.backend.scripting.GlobalScript.init();
 		#end
 
-		#if (sys && TEST_BUILD)
-			trace("Used cne test / cne build. Switching into source assets.");
-			#if MOD_SUPPORT
-				ModsFolder.modsPath = './${pathBack}mods/';
-				ModsFolder.addonsPath = './${pathBack}addons/';
-			#end
-			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', './${pathBack}assets/', true));
-		#elseif USE_ADAPTED_ASSETS
-			Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', './assets/', true));
+		#if (sys)
+		trace("Used cne test / cne build. Switching into source assets.");
+		#if MOD_SUPPORT
+		ModsFolder.modsPath = #if desktop './${pathBack}mods/' #else Sys.getCwd() + './${pathBack}mods/' #end;
+		ModsFolder.addonsPath = #if desktop './${pathBack}addons/' #else Sys.getCwd() + './${pathBack}addons/' #end;
 		#end
-
+	    Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', #if desktop './${pathBack}assets/' #else Sys.getCwd() + './${pathBack}assets/' #end, true));
+		#elseif USE_ADAPTED_ASSETS
+		Paths.assetsTree.__defaultLibraries.push(ModsFolder.loadLibraryFromFolder('assets', #if desktop './assets/' #else Sys.getCwd() + 'assets/' #end, true));
+		#end
 
 		var lib = new AssetLibrary();
 		@:privateAccess

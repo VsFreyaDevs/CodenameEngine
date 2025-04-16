@@ -21,6 +21,10 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 	{
 		super("Codename Engine", "All the contributors of the engine! - Press RESET to update the list (One reset per 2 minutes).");
 		tryUpdating(true);
+		#if mobile
+		MusicBeatState.instance.addVPad(UP_DOWN, A_B);
+		MusicBeatState.instance.addVPadCamera();
+		#end
 	}
 
 	// blame the secondary threads if the code has to look this bad  - Nex
@@ -67,6 +71,7 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 	}
 
 	override function close() {
+		#if mobile MusicBeatState.instance.removeVPad(); MusicBeatState.instance.addVPad(UP_DOWN, A_B); MusicBeatState.instance.addVPadCamera(); #end
 		super.close();
 		for (frmt in contribFormats) parent.treeParent.pathDesc.removeFormat(frmt.format);
 	}
