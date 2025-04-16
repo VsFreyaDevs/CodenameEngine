@@ -50,17 +50,20 @@ class CharacterInfoScreen extends UISubstateWindow {
 		add(title = new UIText(windowSpr.x + 20, windowSpr.y + 30 + 16, 0, "Sprite Data", 28));
 
 		spriteTextBox = new UITextBox(title.x, title.y + title.height + 38, character.sprite, 200);
+		spriteTextBox.onChange = (sprite:String) -> checkSpriteFile(sprite);
 		add(spriteTextBox);
 		addLabelOn(spriteTextBox, "Sprite");
 
 		iconTextBox = new UITextBox(spriteTextBox.x + 200 + 26, spriteTextBox.y, character.getIcon(), 150);
 		iconTextBox.onChange = (newIcon:String) -> {updateIcon(newIcon);}
+		iconTextBox.onChange = (newIcon:String) -> updateIcon(newIcon);
 		add(iconTextBox);
 		addLabelOn(iconTextBox, "Icon");
 
 		updateIcon(character.getIcon());
 
 		gameOverCharTextBox = new UITextBox(iconTextBox.x + 150 + (75 + 12), iconTextBox.y, character.gameOverCharacter, 200);
+		gameOverCharTextBox.onChange = (sprite:String) -> checkSpriteFile(sprite);
 		add(gameOverCharTextBox);
 		addLabelOn(gameOverCharTextBox, "Game Over Character");
 

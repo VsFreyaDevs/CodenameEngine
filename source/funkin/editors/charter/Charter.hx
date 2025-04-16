@@ -295,7 +295,23 @@ class Charter extends UIState {
 						label: 'Low Detail Waveforms',
 						onSelect: _view_switchWaveformDetail,
 						icon: Options.charterLowDetailWaveforms ? 1 : 0
-					}
+					},
+					{
+						label: "Scroll left",
+						keybind: [SHIFT, LEFT],
+						onSelect: _view_scrollleft
+					},
+					{
+						label: "Scroll right",
+						keybind: [SHIFT, RIGHT],
+						onSelect: _view_scrollright
+					},
+					{
+						label: "Reset scroll",
+						keybind: [SHIFT, DOWN],
+						onSelect: _view_scrollreset
+					},
+					null,
 				]
 			},
 			{
@@ -385,9 +401,6 @@ class Charter extends UIState {
 						label: "Metronome",
 						onSelect: _playback_metronome,
 						icon: Options.charterMetronomeEnabled ? 1 : 0
-					},
-					{
-						label: "Visual metronome"
 					},
 				]
 			}
@@ -1175,7 +1188,7 @@ class Charter extends UIState {
 			gridBackdrops.conductorSprY = lerp(gridBackdrops.conductorSprY, curStepFloat * 40, __firstFrame ? 1 : 1/3);
 		}
 		charterCamera.scroll.set(
-			((((40*4) * gridBackdrops.strumlinesAmount) - FlxG.width) / 2),
+			lerp(charterCamera.scroll.x, ((( (40*4) * gridBackdrops.strumlinesAmount) - FlxG.width) / 2) + sideScroll, __firstFrame ? 1 : 1/3),
 			gridBackdrops.conductorSprY - (FlxG.height * 0.5)
 		);
 
@@ -1226,14 +1239,20 @@ class Charter extends UIState {
 			if(FlxG.keys.justPressed.ANY && !strumLines.isDragging && this.currentFocus == null)
 				UIUtil.processShortcuts(topMenu);
 
-			if (FlxG.keys.pressed.CONTROL) {
-				if (FlxG.mouse.wheel != 0) {
-					zoom += 0.25 * FlxG.mouse.wheel;
-					__camZoom = Math.pow(2, zoom);
-				}
-			} else {
-				if (!FlxG.sound.music.playing) {
-					Conductor.songPosition -= (__crochet * FlxG.mouse.wheel) - Conductor.songOffset;
+			if (!topMenuSpr.anyMenuOpened) {
+				if (FlxG.keys.pressed.CONTROL) {
+					if (FlxG.mouse.wheel != 0) {
+						zoom += 0.25 * FlxG.mouse.wheel;
+						__camZoom = Math.pow(2, zoom);
+					}
+				} else if (FlxG.keys.pressed.SHIFT) {
+					if (FlxG.mouse.wheel != 0) {
+						sideScroll -= 40 * FlxG.mouse.wheel;
+					}
+				} else {
+					if (!FlxG.sound.music.playing) {
+						Conductor.songPosition -= (__crochet * FlxG.mouse.wheel) - Conductor.songOffset;
+					}
 				}
 			}
 		}
@@ -1295,6 +1314,11 @@ class Charter extends UIState {
 		return __camZoom = FlxMath.bound(val, 0.1, 3);
 	}
 
+	var sideScroll(default, set):Float = 0;
+	function set_sideScroll(val:Float) {
+		return sideScroll = FlxMath.bound(val, -((40*Charter.keyCount) * gridBackdrops.strumlinesAmount) / 2, ((40*Charter.keyCount) * gridBackdrops.strumlinesAmount) / 2);
+	}
+	
 	// TOP MENU OPTIONS
 	#if REGION
 	function _file_exit(_) {
@@ -1640,6 +1664,16 @@ class Charter extends UIState {
 	function _view_switchWaveformDetail(t) {
 		t.icon = (Options.charterLowDetailWaveforms = !Options.charterLowDetailWaveforms) ? 1 : 0;
 		for (shader in waveformHandler.waveShaders) shader.data.lowDetail.value = [Options.charterLowDetailWaveforms];
+	}
+
+	function _view_scrollleft(_) {
+		sideScroll -= 40;
+	}
+	function _view_scrollright(_) {
+		sideScroll += 40;
+	}
+	function _view_scrollreset(_) {
+		sideScroll = 0;
 	}
 	
 	inline function _snap_increasesnap(_) changequant(1);
