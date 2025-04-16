@@ -13,8 +13,9 @@ class Update {
 		// to prevent messing with currently installed libs
 		if (!FileSystem.exists('.haxelib'))
 			FileSystem.createDirectory('.haxelib');
-
+		
 		var filename = #if desktop "./libs.xml" #else "./libs-mobile.xml" #end;
+		prettyPrint(filename);
 		var isSilent = false;
 		for(arg in args) {
 			if (arg.startsWith("--lib="))
