@@ -137,8 +137,13 @@ class PlayState extends MusicBeatState
 	 */
 	public var downscroll(get, set):Bool;
 
-	@:dox(hide) private function set_downscroll(v:Bool) {return camHUD.downscroll = v;}
-	@:dox(hide) private function get_downscroll():Bool  {return camHUD.downscroll;}
+	@:dox(hide) private function set_downscroll(v:Bool) {
+		scripts.call('onDownscrollSet', [v]);
+		return camHUD.downscroll = v;
+	}
+	@:dox(hide) private function get_downscroll():Bool {
+		return camHUD.downscroll;
+	}
 
 	/**
 	 * Instrumental sound (Inst.ogg).
