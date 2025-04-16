@@ -121,7 +121,7 @@ class UpdateScreen extends MusicBeatState {
 					#if windows
 					// the executable has been replaced, restart the game entirely
 					Sys.command('start /B ${AsyncUpdater.executableName}');
-					#elseif !mobile
+					#else
 					// We have to make the new executable allowed to execute
 					// before we can execute it!
 					Sys.command('chmod +x ./${AsyncUpdater.executableName} && ./${AsyncUpdater.executableName}');

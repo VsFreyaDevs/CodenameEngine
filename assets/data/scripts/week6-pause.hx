@@ -2,10 +2,6 @@ import funkin.ui.FunkinText;
 import flixel.text.FlxText;
 import flixel.text.FlxTextBorderStyle;
 import flixel.util.FlxAxes;
-#if mobile
-import funkin.mobile.FlxDPadMode;
-import funkin.mobile.FlxActionMode;
-#end
 
 var pixelScript:Script;
 var pauseCam = new FlxCamera();
@@ -66,10 +62,7 @@ function create(event) {
 	cameras = [pauseCam];
 
 	FlxG.sound.play(Paths.sound(isThorns ? 'pixel/ANGRY' : 'pixel/clickText'));
-
-	#if mobile
-	setVirtualPad(FlxDPadMode.UP_DOWN, FlxActionMode.A, true);
-	#end
+}
 
 function confText(text) {
 	text.scale.set(6, 6);

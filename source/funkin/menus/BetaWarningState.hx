@@ -36,22 +36,12 @@ class BetaWarningState extends MusicBeatState {
 	public override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		var accepted:Bool = controls.ACCEPT;
-
-		#if mobile
-		for (touch in FlxG.touches.list) {
-			if (touch.justPressed) {
-				accepted = true;
-				}
-		}
-	    #end
-
-		if (accepted && transitioning) {
+		if (controls.ACCEPT && transitioning) {
 			FlxG.camera.stopFX(); FlxG.camera.visible = false;
 			goToTitle();
 		}
 
-		if (accepted && !transitioning) {
+		if (controls.ACCEPT && !transitioning) {
 			transitioning = true;
 			CoolUtil.playMenuSFX(CONFIRM);
 			FlxG.camera.flash(FlxColor.WHITE, 1, function() {

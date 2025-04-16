@@ -21,10 +21,6 @@ class MainState extends FlxState {
 			Main.loadGameSettings();
 		initiated = true;
 
-		#if android
-		FlxG.android.preventDefaultKeys = [BACK];
-		#end
-		
 		#if sys
 		CoolUtil.deleteFolder('./.temp/'); // delete temp folder
 		#end

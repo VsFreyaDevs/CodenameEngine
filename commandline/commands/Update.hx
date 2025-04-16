@@ -13,15 +13,16 @@ class Update {
 		// to prevent messing with currently installed libs
 		if (!FileSystem.exists('.haxelib'))
 			FileSystem.createDirectory('.haxelib');
-		
-		var filename = #if desktop "./libs.xml" #else "./libs-mobile.xml" #end;
-		prettyPrint(filename);
+
+		var filename = "./libs.xml";
 		var isSilent = false;
 		for(arg in args) {
-			if (arg.startsWith("--lib="))
+			if (arg.startsWith("--lib=")) {
 				filename = arg.substr("--lib=".length);
-			if (arg == "--silent" || arg == "-s")
+			}
+			if (arg == "--silent" || arg == "-s") {
 				isSilent = true;
+			}
 		}
 
 		if(!FileSystem.exists(filename)) {

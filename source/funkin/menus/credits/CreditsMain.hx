@@ -45,15 +45,8 @@ class CreditsMain extends TreeMenu {
 		main = new OptionsScreen('Credits', 'The people who made this possible!', items);
 		super.create();
 
-		#if mobile
-		addVPad(UP_DOWN, A_B);
-		addVPadCamera();
-		vPad.visible = true;
-		#end
-
 		DiscordUtil.call("onMenuLoaded", ["Credits Menu"]);
 	}
-	
 
 	/**
 	 * XML STUFF
@@ -102,7 +95,6 @@ class CreditsMain extends TreeMenu {
 						credsMenus.push(opt);
 
 					case "menu":
-						vPad.visible = false;
 						credsMenus.push(new TextOption(name + " >", desc, function() {
 							optionsTree.add(new OptionsScreen(name, desc, parseCreditsFromXML(node, source)));
 						}));

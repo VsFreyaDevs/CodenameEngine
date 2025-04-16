@@ -47,10 +47,6 @@ class AppearanceOptions extends OptionsScreen {
 			"Auto Pause",
 			"If checked, switching windows will pause the game.",
 			"autoPause"));
-		#if mobile
-		MusicBeatState.instance.addVPad(FULL, A_B);
-		MusicBeatState.instance.addVPadCamera();
-		#end
 	}
 
 	private function __changeFPS(change:Float) {
