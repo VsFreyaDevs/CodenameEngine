@@ -138,7 +138,8 @@ class PlayState extends MusicBeatState
 	public var downscroll(get, set):Bool;
 
 	@:dox(hide) private function set_downscroll(v:Bool) {
-		scripts.call('onDownscrollSet', [v]);
+		if (camHUD.downscroll != v)
+			scripts.call('onDownscrollSet', [v]);
 		return camHUD.downscroll = v;
 	}
 	@:dox(hide) private function get_downscroll():Bool {
