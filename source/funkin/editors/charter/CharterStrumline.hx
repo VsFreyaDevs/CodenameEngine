@@ -51,7 +51,8 @@ class CharterStrumline extends UISprite {
 		var maxRow = Math.floor((icons.length-1) / 4) + 1;
 		for (i=>icon in icons) {
 			var healthIcon = new HealthIcon(Character.getIconFromCharName(icon));
-			healthIcon.scale.x = healthIcon.scale.y = Math.max((0.6 - (icons.length / 20)), 0.35);
+			var newScale = Math.max((0.6 - (icons.length / 20)), 0.35);
+			healthIcon.scale.x = healthIcon.scale.y = healthIcon.defaultScale * newScale;
 			healthIcon.updateHitbox();
 
 			healthIcon.x = FlxMath.lerp(0, Math.min(icons.length * 20, 120), (maxCol-1 != 0 ? (i % 4) / (maxCol-1) : 0));
@@ -111,7 +112,8 @@ class CharterStrumline extends UISprite {
 		var maxRow = Math.floor((icons.length-1) / 4) + 1;
 		for (i=>icon in icons) {
 			var healthIcon = new HealthIcon(Character.getIconFromCharName(icon));
-			healthIcon.scale.x = healthIcon.scale.y = Math.max((0.6 - (icons.length / 20)), 0.35);
+			var newScale = Math.max((0.6 - (icons.length / 20)), 0.35);
+			healthIcon.scale.x = healthIcon.scale.y = healthIcon.defaultScale * newScale;
 			healthIcon.updateHitbox();
 
 			healthIcon.x = FlxMath.lerp(0, Math.min(icons.length * 20, 120), (maxCol-1 != 0 ? (i % 4) / (maxCol-1) : 0));
