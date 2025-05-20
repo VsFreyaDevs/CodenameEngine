@@ -1338,6 +1338,8 @@ class PlayState extends MusicBeatState
 			}
 			data.put();
 		}
+
+		if (camZooming){
 			FlxG.camera.zoom = lerp(FlxG.camera.zoom, defaultCamZoom, camGameZoomLerp);
 			camHUD.zoom = lerp(camHUD.zoom, defaultHudZoom, camHUDZoomLerp);
 		}
@@ -1528,7 +1530,7 @@ class PlayState extends MusicBeatState
 	public function endSong():Void
 	{
 		endingSong = true;
-		
+
 		var event = scripts.event("onSongEnd", new CancellableEvent());
 		if (event.cancelled) return;
 		
