@@ -87,23 +87,18 @@ class Chart {
 		return data;
 	}
 
-	public static function loadChartMeta(songName:String, difficulty:String = "normal", fromMods:Bool = true) {
+	public static function loadChartMeta(songName:String, difficulty:String = "normal", fromMods:Bool = true):ChartMetaData {
 		var songNameLower = songName.toLowerCase();
 		var metaPath = Paths.file('songs/${songNameLower}/meta.json');
 		var metaDiffPath = Paths.file('songs/${songNameLower}/meta-${difficulty.toLowerCase()}.json');
 
 		var data:ChartMetaData = null;
 		var fromMods:Bool = fromMods;
-		for(path in [metaDiffPath, metaPath]) {
-			if (Assets.exists(path)) {
-				fromMods = Paths.assetsTree.existsSpecific(path, "TEXT", MODS);
-				try {
-					data = Json.parse(Assets.getText(path));
-				} catch(e) {
-					Logs.trace('Failed to load song metadata for ${songName} ($path): ${Std.string(e)}', ERROR);
-				}
-				if (data != null) break;
-			}
+		for (path in [metaDiffPath, metaPath]) if (Assets.exists(path)) {
+			fromMods = Paths.assetsTree.existsSpecific(path, "TEXT", MODS);
+			try data = Json.parse(Assets.getText(path))
+			catch(e) Logs.trace('Failed to load song metadata for ${songName} ($path): ${Std.string(e)}', ERROR);
+			if (data != null) break;
 		}
 
 		if (data == null)
@@ -165,11 +160,9 @@ class Chart {
 			valid = false;
 		}
 		var data:Dynamic = null;
-		try {
-			if (valid)
-				data = Json.parse(Assets.getText(chartPath));
-		} catch(e) {
-			Logs.trace('Could not parse chart for song ${songName} ($difficulty): ${Std.string(e)}', ERROR, RED);
+		if (valid) {
+			try data = Json.parse(Assets.getText(chartPath))
+			catch(e) Logs.trace('Could not parse chart for song ${songName} ($difficulty): ${Std.string(e)}', ERROR, RED);
 		}
 
 		/**

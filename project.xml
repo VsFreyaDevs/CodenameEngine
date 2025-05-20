@@ -10,7 +10,7 @@
 	<!--
 		CHANGE THE SAVE PATH & NAME FOR YOUR MOD HERE!
 	-->
-	<app save-path="TheBrCrew/VsBr" save-name="save-vsbr" mod-saves="true" />
+	<app save-path="YoshiCrafter29/CodenameEngine" save-name="save-vsbr" mod-saves="true" />
 
 	<!-- DO NOT REMOVE!! ALLOWS ME TO DO REGIONS LIKE IN C# AND KEEP CODE ORGANIZED. REMOVING IT WOULD BREAK THE ENGINE -->
 	<haxedef name="REGION" />
