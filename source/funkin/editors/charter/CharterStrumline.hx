@@ -96,8 +96,8 @@ class CharterStrumline extends UISprite {
 		for (i=>icon in icons) {
 			var healthIcon = new HealthIcon(Character.getIconFromCharName(icon));
 			var newScale = Math.max((0.6 - (icons.length / 20)), 0.35);
-			var size = Std.int(150 * newScale);
-			healthIcon.setUnstretchedGraphicSize(size, size, true);
+			var size = healthIcon.defaultScale * newScale; //Std.int(150 * newScale);
+			healthIcon.scale.set(size, size);
 			healthIcon.updateHitbox();
 
 			healthIcon.x = FlxMath.lerp(0, Math.min(icons.length * 20, 120), (maxCol-1 != 0 ? (i % 4) / (maxCol-1) : 0));
