@@ -9,7 +9,7 @@ class ThreadUtil {
 	 */
 	public static function createSafe(func:Void->Void, autoRestart:Bool = false) {
 		if (autoRestart) {
-			return sys.thread.Thread.create(function() {
+			return sys.thread.Thread.create(() -> {
 				while(true) {
 					try {
 						func();
@@ -19,7 +19,7 @@ class ThreadUtil {
 				}
 			});
 		} else {
-			return sys.thread.Thread.create(function() {
+			return sys.thread.Thread.create(() -> {
 				try {
 					func();
 				} catch(e) {

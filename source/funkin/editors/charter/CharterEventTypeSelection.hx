@@ -33,7 +33,7 @@ class CharterEventTypeSelection extends UISubstateWindow {
 		add(buttonsBG);
 
 		for(k=>eventName in EventsData.eventsList) {
-			var button = new UIButton(0, (32 * k), eventName, function() {
+			var button = new UIButton(0, (32 * k), eventName, () -> {
 				close();
 				callback(eventName);
 			}, w);
@@ -56,9 +56,7 @@ class CharterEventTypeSelection extends UISubstateWindow {
 
 		windowSpr.bHeight = 61 + (32 * (17));
 
-		add(new UIButton(10, windowSpr.bHeight-42, "Cancel", function() {
-			close();
-		}, w));
+		add(new UIButton(10, windowSpr.bHeight-42, "Cancel", () -> close(), w));
 
 		upIndicator = new UIText(0, 0, 0, "↑", 18);
 		upIndicator.cameras = [buttonCameras];

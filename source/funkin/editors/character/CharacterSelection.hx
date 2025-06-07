@@ -21,12 +21,10 @@ class CharacterSelection extends EditorTreeMenu
 		var list:Array<OptionType> = [
 			for (char in (modsList.length == 0 ? Character.getList(false) : modsList))
 				new IconOption(char, "Press ACCEPT to edit this character.", Character.getIconFromCharName(char),
-			 	function() {
-					FlxG.switchState(new CharacterEditor(char));
-				})
+			 	() -> FlxG.switchState(new CharacterEditor(char)))
 		];
 
-		list.insert(0, new NewOption("New Character", "New Character", function() {
+		list.insert(0, new NewOption("New Character", "New Character", () -> {
 			openSubState(new CharacterCreationScreen(null, (_) -> {
 				if(_ != null) {trace("new character editor thing????");}
 			}));

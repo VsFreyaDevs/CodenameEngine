@@ -28,9 +28,7 @@ class Paths
 	public static var tempFramesCache:Map<String, FlxFramesCollection> = [];
 
 	public static function init() {
-		FlxG.signals.preStateSwitch.add(function() {
-			tempFramesCache.clear();
-		});
+		FlxG.signals.preStateSwitch.add(() -> tempFramesCache.clear());
 	}
 
 	public static inline function getPath(file:String, ?library:String)

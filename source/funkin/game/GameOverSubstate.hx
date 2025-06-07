@@ -162,7 +162,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 		new FlxTimer().start(waitTime, function(tmr:FlxTimer)
 		{
-			FlxG.camera.fade(FlxColor.BLACK, fadeOutTime, false, function()
+			FlxG.camera.fade(FlxColor.BLACK, fadeOutTime, false, () ->
 			{
 				MusicBeatState.skipTransOut = true;
 				FlxG.switchState(new PlayState());

@@ -44,7 +44,7 @@ class CreditsCodename extends funkin.options.OptionsScreen {
 	public function tryUpdating(forceDisplaying:Bool = false) {
 		updateMenuDesc("Downloading List...");
 		_canReset = false;
-		Main.execAsync(function() {
+		Main.execAsync(() -> {
 			if(checkUpdate() || forceDisplaying) _downloadingSteps = 2;
 			else _downloadingSteps = 1;
 		});

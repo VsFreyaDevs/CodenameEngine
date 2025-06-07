@@ -116,7 +116,7 @@ class UpdateScreen extends MusicBeatState {
 			bf.animation.play("loading-anim", true, false, 1);
 			bf.alpha = 1;
 
-			FlxG.camera.fade(0xFF000000, overSound.length / 1000, false, function() {
+			FlxG.camera.fade(0xFF000000, overSound.length / 1000, false, () -> {
 				if (updater.executableReplaced) {
 					#if windows
 					// the executable has been replaced, restart the game entirely

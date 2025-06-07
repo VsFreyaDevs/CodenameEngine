@@ -116,7 +116,7 @@ AudioFixClient *curAudioFix;
 @:dox(hide)
 class Windows {
 
-	public static var __audioChangeCallback:Void->Void = function() {
+	public static var __audioChangeCallback:Void->Void = () -> {
 		trace("test");
 	};
 

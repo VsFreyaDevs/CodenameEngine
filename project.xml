@@ -5,7 +5,7 @@
 		title="fnf vs br" main="funkin.backend.system.Main"
 		file="VsBrRetoasted" packageName="com.thebrcrew.codenameengine"
 		package="com.thebrcrew.codenameengine"
-		version="0.1.0" company="TheBrCrew" />
+		version="0.1.0-legacy" company="TheBrCrew" />
 
 	<!--
 		CHANGE THE SAVE PATH & NAME FOR YOUR MOD HERE!

@@ -78,9 +78,7 @@ class ZipUtil {
 	public static function uncompressZipAsync(zip:Reader, destFolder:String, ?prog:ZipProgress, ?prefix:String):ZipProgress {
 		if (prog == null)
 			prog = new ZipProgress();
-		Thread.create(function() {
-			uncompressZip(zip, destFolder, prefix, prog);
-		});
+		Thread.create(() -> uncompressZip(zip, destFolder, prefix, prog));
 		return prog;
 	}
 	#end
@@ -147,7 +145,7 @@ class ZipUtil {
 			var files:Array<StrNameLabel> = [];
 
 			var doFolder:Void->Void = null;
-			(doFolder = function() {
+			(doFolder = () -> {
 				var path = curPath.join("/");
 				var zipPath = destPath.join("/");
 				for(e in FileSystem.readDirectory(path)) {
@@ -194,9 +192,7 @@ class ZipUtil {
 
 	public static function writeFolderToZipAsync(zip:ZipWriter, path:String, ?prefix:String):ZipProgress {
 		var zipProg = new ZipProgress();
-		Thread.create(function() {
-			writeFolderToZip(zip, path, prefix, zipProg);
-		});
+		Thread.create(() -> writeFolderToZip(zip, path, prefix, zipProg));
 		return zipProg;
 	}
 

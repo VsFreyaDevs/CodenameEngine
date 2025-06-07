@@ -56,7 +56,7 @@ class ScriptedCutscene extends Cutscene {
 	#if REGION
 	public function startVideo(path:String, ?callback:Void->Void) {
 		persistentDraw = false;
-		openSubState(new VideoCutscene(path, function() {
+		openSubState(new VideoCutscene(path, () -> {
 			if (callback != null)
 				callback();
 		}));
@@ -72,7 +72,7 @@ class ScriptedCutscene extends Cutscene {
 	#if REGION
 	public function startDialogue(path:String, ?callback:Void->Void) {
 		persistentDraw = true;
-		openSubState(new DialogueCutscene(path, function() {
+		openSubState(new DialogueCutscene(path, () -> {
 			if (callback != null)
 				callback();
 		}));

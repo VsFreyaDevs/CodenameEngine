@@ -47,7 +47,7 @@ class DiscordUtil
 			return;
 		initialized = true;
 
-		discordThread = Thread.create(function()
+		discordThread = Thread.create(() ->
 		{
 			while (true)
 			{

@@ -44,9 +44,7 @@ class BetaWarningState extends MusicBeatState {
 		if (controls.ACCEPT && !transitioning) {
 			transitioning = true;
 			CoolUtil.playMenuSFX(CONFIRM);
-			FlxG.camera.flash(FlxColor.WHITE, 1, function() {
-				FlxG.camera.fade(FlxColor.BLACK, 2.5, false, goToTitle);
-			});
+			FlxG.camera.flash(FlxColor.WHITE, 1, () -> FlxG.camera.fade(FlxColor.BLACK, 2.5, false, goToTitle));
 		}
 	}
 

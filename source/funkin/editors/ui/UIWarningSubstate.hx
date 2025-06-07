@@ -87,7 +87,7 @@ class UIWarningSubstate extends MusicBeatSubstate {
 
 		var xPos = (FlxG.width - (30 + (170 * buttons.length))) / 2;
 		for(k=>b in buttons) {
-			var button = new UIButton(xPos + 20 + (170 * k), spr.y + spr.bHeight - (36 + 16), b.label, function() {
+			var button = new UIButton(xPos + 20 + (170 * k), spr.y + spr.bHeight - (36 + 16), b.label, () -> {
 				b.onClick(this);
 				close();
 			}, 160, 30);

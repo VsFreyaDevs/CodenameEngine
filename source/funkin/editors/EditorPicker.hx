@@ -100,22 +100,16 @@ class EditorPicker extends MusicBeatSubstate {
 				selected = true;
 				CoolUtil.playMenuSFX(CONFIRM);
 
-				MusicBeatState.skipTransIn = true;
-				MusicBeatState.skipTransOut = true;
+				MusicBeatState.skipTransIn = MusicBeatState.skipTransOut = true;
 
 				if (FlxG.sound.music != null)
-					FlxG.sound.music.fadeOut(0.7, 0, function(n) {
-						FlxG.sound.music.stop();
-					});
+					FlxG.sound.music.fadeOut(0.7, 0, (n) -> FlxG.sound.music.stop());
 
-				sprites[curSelected].flicker(function() {
-					subCam.fade(0xFF000000, 0.25, false, function() {
-						FlxG.switchState(Type.createInstance(options[curSelected].state, []));
-					});
+				sprites[curSelected].flicker(() -> {
+					subCam.fade(0xFF000000, 0.25, false, () -> FlxG.switchState(Type.createInstance(options[curSelected].state, [])));
 				});
-			} else {
+			} else 
 				CoolUtil.openURL("https://www.youtube.com/watch?v=9Youam7GYdQ");
-			}
 
 		}
 		if (controls.BACK)
@@ -212,8 +206,6 @@ class EditorPickerOption extends FlxTypedSpriteGroup<FlxSprite> {
 	}
 
 	public function flicker(callback:Void->Void) {
-		FlxFlicker.flicker(label, 0.5, Options.flashingMenu ? 0.06 : 0.15, false, false, function(t) {
-			callback();
-		});
+		FlxFlicker.flicker(label, 0.5, Options.flashingMenu ? 0.06 : 0.15, false, false, (t) -> callback());
 	}
 }

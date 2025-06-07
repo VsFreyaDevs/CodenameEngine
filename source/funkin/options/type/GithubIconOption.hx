@@ -20,7 +20,7 @@ class GithubIconOption extends TextOption
 	}
 
 	public function new(user:Dynamic, desc:String, ?callback:Void->Void, ?customName:String, size:Int = 96, usePortrait:Bool = true, waitUntilLoad:Float = 0.25) {
-		super(customName == null ? user.login : customName, desc, callback == null ? function() CoolUtil.openURL(user.html_url) : callback);
+		super(customName == null ? user.login : customName, desc, callback == null ? () -> CoolUtil.openURL(user.html_url) : callback);
 		this.user = user;
 		this.icon = new GithubUserIcon(user, size, waitUntilLoad);
 		this.usePortrait = usePortrait;
@@ -52,7 +52,7 @@ class GithubUserIcon extends FlxSprite
 	override function drawComplex(camera:FlxCamera):Void {  // Making the image downlaod only if the player actually sees it on the screeeeen  - Nex
 		if(waitUntilLoad <= 0) {
 			waitUntilLoad = null;
-			Main.execAsync(function() {
+			Main.execAsync(() -> {
 				var key:String = 'GITHUB-USER:${user.login}';
 				var bmap:Dynamic = FlxG.bitmap.get(key);
 

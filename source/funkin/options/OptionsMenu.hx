@@ -49,21 +49,15 @@ class OptionsMenu extends TreeMenu {
 		bg.antialiasing = true;
 		add(bg);
 
-		main = new OptionsScreen("Options", "Select a category to continue.", [for(o in mainOptions) new TextOption(o.name, o.desc, function() {
+		main = new OptionsScreen("Options", "Select a category to continue.", [for(o in mainOptions) new TextOption(o.name, o.desc, () -> {
 			if (o.substate != null) {
 				persistentUpdate = false;
 				persistentDraw = true;
-				if (o.substate is MusicBeatSubstate) {
-					openSubState(o.substate);
-				} else {
-					openSubState(Type.createInstance(o.substate, []));
-				}
+				if (o.substate is MusicBeatSubstate) openSubState(o.substate);
+				else openSubState(Type.createInstance(o.substate, []));
 			} else {
-				if (o.state is OptionsScreen) {
-					optionsTree.add(o.state);
-				} else {
-					optionsTree.add(Type.createInstance(o.state, []));
-				}
+				if (o.state is OptionsScreen) optionsTree.add(o.state);
+				else optionsTree.add(Type.createInstance(o.state, []));
 			}
 		})]);
 
@@ -145,9 +139,7 @@ class OptionsMenu extends TreeMenu {
 						options.push(new ArrayOption(name, desc, optionOptions, optionDisplayOptions, node.att.id, null, FlxG.save.data));
 
 				case "menu":
-					options.push(new TextOption(name + " >", desc, function() {
-						optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node)));
-					}));
+					options.push(new TextOption(name + " >", desc, () -> optionsTree.add(new OptionsScreen(name, desc, parseOptionsFromXML(node)))));
 			}
 		}
 

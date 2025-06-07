@@ -56,7 +56,7 @@ class VideoCutscene extends Cutscene {
 		parseSubtitles();
 
 		video = new FlxVideo();
-		video.onEndReached.add(function()
+		video.onEndReached.add(() ->
 		{
 			video.dispose();
 			FlxG.removeChild(video);
@@ -93,15 +93,13 @@ class VideoCutscene extends Cutscene {
 			// ZIP PATH: EXPORT
 			// TODO: this but better and more ram friendly
 			localPath = './.temp/video-${curVideo++}.mp4';
-			Main.execAsync(function() {
+			Main.execAsync(() -> {
 				File.saveBytes(localPath, Assets.getBytes(path));
 				videoReady = true;
 			});
 		} else {
 			if (video.load(localPath))
-				new FlxTimer().start(0.001, function(tmr:FlxTimer) {
-					video.play();
-				});
+				new FlxTimer().start(0.001, (tmr:FlxTimer) -> video.play());
 			else
 				close();
 		}
@@ -180,9 +178,7 @@ class VideoCutscene extends Cutscene {
 			videoReady = false;
 
 			if (video.load(localPath))
-				new FlxTimer().start(0.001, function(tmr:FlxTimer) {
-					video.play();
-				});
+				new FlxTimer().start(0.001, (tmr:FlxTimer) -> video.play());
 			else
 			{
 				close();
@@ -202,12 +198,11 @@ class VideoCutscene extends Cutscene {
 		while (subtitles.length > 0 && subtitles[0].time < Math.round(FPHelper.i64ToDouble(time.low, time.high)))
 			setSubtitle(subtitles.shift());
 
-		if (loadingBackdrop != null) {
+		if (loadingBackdrop != null) 
 			loadingBackdrop.x -= elapsed * FlxG.width * 0.5;
-		}
-		if (skippable && video.isPlaying && controls.ACCEPT) {
+
+		if (skippable && video.isPlaying && controls.ACCEPT) 
 			video.onEndReached.dispatch();
-		}
 		#else
 		close();
 		#end

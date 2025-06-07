@@ -208,9 +208,9 @@ class KeybindsOptions extends MusicBeatSubstate {
 				if (alphabets.members[curSelected] != null) {
 					canSelect = false;
 					CoolUtil.playMenuSFX(CONFIRM);
-					alphabets.members[curSelected].changeKeybind(function() {
+					alphabets.members[curSelected].changeKeybind(() -> {
 						canSelect = true;
-					}, function() {
+					}, () -> {
 						canSelect = true;
 					}, p2Selected);
 				}

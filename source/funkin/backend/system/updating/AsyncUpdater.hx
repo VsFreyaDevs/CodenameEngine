@@ -101,13 +101,13 @@ class AsyncUpdater {
 		progress.files = files.length;
 		progress.step = DOWNLOADING_ASSETS;
 		trace('starting assets download');
-		doFile(files.copy(), fileNames.copy(), function() {
+		doFile(files.copy(), fileNames.copy(), () -> {
 			progress.curFile = -1;
 			progress.curFileName = null;
 			progress.files = 1;
 			progress.step = DOWNLOADING_EXECUTABLE;
 			trace('starting exe download');
-			doFile([exePath], [executableName], function() {
+			doFile([exePath], [executableName], () -> {
 				trace('done, starting installation');
 				installFiles(fileNames);
 				progress.done = true;
