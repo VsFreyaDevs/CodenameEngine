@@ -24,7 +24,7 @@ class PauseSubState extends MusicBeatSubstate
 
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
-	publicvar levelInfo:FunkinText;
+	var levelInfo:FunkinText;
 	var levelDifficulty:FunkinText;
 	var deathCounter:FunkinText;
 	var multiplayerText:FunkinText;
