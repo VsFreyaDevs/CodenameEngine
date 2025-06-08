@@ -11,7 +11,7 @@ class CodenameBuildField extends TextField {
 		defaultTextFormat = Framerate.textFormat;
 		autoSize = LEFT;
 		multiline = wordWrap = false;
-		text = 'Vs. br: Retoasted v1.0 DEV/PLAYTESTER BUILD\nCodename Engine ${Main.releaseCycle}\npls dont leak pls dont leak';
+		text = 'Vs. br: Retoasted v1.0 DEV/PLAYTESTER BUILD\nCodename Engine ' + Main.releaseCycle + '\nVersion ' + Main.releaseVersion + '\npls dont leak pls dont leak';
 		selectable = false;
 	}
 }
